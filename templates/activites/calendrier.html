@@ -1,0 +1,146 @@
+{% extends 'base.html' %}
+
+{% block title %}Calendrier des activités - Camp de Vacances{% endblock %}
+
+{% block extra_css %}
+<style>
+    .calendar {
+        width: 100%;
+    }
+
+    .month-header {
+        background-color: #0d6efd;
+        color: white;
+        text-align: center;
+        font-size: 1.5em;
+        padding: 10px;
+    }
+
+    .weekdays {
+        background-color: #f8f9fa;
+    }
+
+    .weekdays th {
+        text-align: center;
+        width: 14.28%;
+        padding: 8px;
+    }
+
+    .calendar td {
+        height: 120px;
+        vertical-align: top;
+        padding: 5px;
+        border: 1px solid #dee2e6;
+        position: relative;
+    }
+
+    .calendar .date {
+        font-weight: bold;
+        font-size: 1.1em;
+        display: block;
+        margin-bottom: 5px;
+    }
+
+    .calendar .noday {
+        background-color: #f8f9fa;
+    }
+
+    .calendar-events {
+        list-style-type: none;
+        padding: 0;
+        margin: 0;
+        font-size: 0.85em;
+    }
+
+    .calendar-event {
+        background-color: #e9ecef;
+        margin-bottom: 3px;
+        padding: 3px 5px;
+        border-radius: 3px;
+        border-left: 3px solid #0d6efd;
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+    }
+
+    .has-events {
+        background-color: #f0f8ff;
+    }
+
+    .today {
+        background-color: #fffacd;
+    }
+
+    .weekend {
+        background-color: #f9f9f9;
+    }
+
+    .month-navigation {
+        margin-bottom: 20px;
+    }
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="row mb-4">
+    <div class="col-md-6">
+        <h1>Calendrier des activités</h1>
+    </div>
+    <div class="col-md-6 text-end">
+        <a href="{% url 'activite_list' %}" class="btn btn-primary">
+            <i class="fas fa-list me-2"></i>Liste des activités
+        </a>
+        <a href="{% url 'activite_create' %}" class="btn btn-success">
+            <i class="fas fa-calendar-plus me-2"></i>Ajouter une activité
+        </a>
+    </div>
+</div>
+
+<div class="card">
+    <div class="card-header bg-light">
+        <div class="row month-navigation">
+            <div class="col-md-4 text-start">
+                <a href="?{{ prev_month }}" class="btn btn-outline-primary">
+                    <i class="fas fa-chevron-left me-2"></i>Mois précédent
+                </a>
+            </div>
+            <div class="col-md-4 text-center">
+                <h4 class="mb-0">{{ calendar|truncatewords_html:3 }}</h4>
+            </div>
+            <div class="col-md-4 text-end">
+                <a href="?{{ next_month }}" class="btn btn-outline-primary">
+                    Mois suivant<i class="fas fa-chevron-right ms-2"></i>
+                </a>
+            </div>
+        </div>
+    </div>
+    <div class="card-body p-2">
+        {{ calendar }}
+    </div>
+</div>
+
+<div class="mt-4">
+    <div class="alert alert-info">
+        <i class="fas fa-info-circle me-2"></i>
+        <strong>Astuce :</strong> Cliquez sur une activité pour voir ses détails.
+    </div>
+</div>
+{% endblock %}
+
+{% block extra_js %}
+<script>
+    document.addEventListener('DOMContentLoaded', function () {
+        // Rendre les événements du calendrier cliquables
+        const events = document.querySelectorAll('.calendar-event');
+        events.forEach(event => {
+            event.style.cursor = 'pointer';
+            event.addEventListener('click', function () {
+                // Récupérer l'ID de l'activité depuis l'attribut data-id
+                const activityId = this.getAttribute('data-id');
+                // Rediriger vers la page de détails de l'activité
+                window.location.href = "/activites/" + activityId + "/";
+            });
+        });
+    });
+</script>
+{% endblock %}

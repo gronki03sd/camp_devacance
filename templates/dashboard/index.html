@@ -1,0 +1,122 @@
+{% extends 'base.html' %}
+
+{% block title %}Tableau de bord - Camp de Vacances{% endblock %}
+
+{% block content %}
+<div class="row">
+    <div class="col-12">
+        <h1 class="mb-4">Tableau de bord</h1>
+    </div>
+</div>
+
+<div class="row">
+    <!-- Statistiques -->
+    <div class="col-md-4 mb-4">
+        <div class="card border-primary h-100">
+            <div class="card-header bg-primary text-white">
+                <h5 class="mb-0">Statistiques</h5>
+            </div>
+            <div class="card-body">
+                <div class="d-flex justify-content-between align-items-center mb-3">
+                    <h6 class="mb-0">Participants</h6>
+                    <span class="badge bg-primary rounded-pill">{{ total_participants }}</span>
+                </div>
+                <div class="d-flex justify-content-between align-items-center">
+                    <h6 class="mb-0">Activités</h6>
+                    <span class="badge bg-primary rounded-pill">{{ total_activites }}</span>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Activités à venir -->
+    <div class="col-md-4 mb-4">
+        <div class="card border-success h-100">
+            <div class="card-header bg-success text-white">
+                <h5 class="mb-0">Activités à venir</h5>
+            </div>
+            <div class="card-body p-0">
+                <ul class="list-group list-group-flush">
+                    {% for activite in activites_a_venir %}
+                    <li class="list-group-item">
+                        <div class="d-flex justify-content-between align-items-center">
+                            <div>
+                                <a href="{% url 'activite_detail' activite.pk %}">{{ activite.nom }}</a>
+                                <small class="d-block text-muted">{{ activite.date_debut|date:"j F Y H:i" }}</small>
+                            </div>
+                            {% if activite.est_complete %}
+                            <span class="badge bg-danger">Complet</span>
+                            {% else %}
+                            <span class="badge bg-success">Places disponibles</span>
+                            {% endif %}
+                        </div>
+                    </li>
+                    {% empty %}
+                    <li class="list-group-item">Aucune activité à venir</li>
+                    {% endfor %}
+                </ul>
+            </div>
+            <div class="card-footer">
+                <a href="{% url 'activite_list' %}" class="btn btn-outline-success btn-sm">Voir toutes les activités</a>
+            </div>
+        </div>
+    </div>
+
+    <!-- Derniers participants -->
+    <div class="col-md-4 mb-4">
+        <div class="card border-info h-100">
+            <div class="card-header bg-info text-white">
+                <h5 class="mb-0">Derniers participants inscrits</h5>
+            </div>
+            <div class="card-body p-0">
+                <ul class="list-group list-group-flush">
+                    {% for participant in recent_participants %}
+                    <li class="list-group-item">
+                        <a href="{% url 'participant_detail' participant.pk %}">{{ participant.prenom }} {{
+                            participant.nom }}</a>
+                        <small class="d-block text-muted">Inscrit le {{ participant.date_inscription|date:"j F Y"
+                            }}</small>
+                    </li>
+                    {% empty %}
+                    <li class="list-group-item">Aucun participant inscrit</li>
+                    {% endfor %}
+                </ul>
+            </div>
+            <div class="card-footer">
+                <a href="{% url 'participant_list' %}" class="btn btn-outline-info btn-sm">Voir tous les
+                    participants</a>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="row">
+    <!-- Actions rapides -->
+    <div class="col-12">
+        <div class="card mb-4">
+            <div class="card-header bg-dark text-white">
+                <h5 class="mb-0">Actions rapides</h5>
+            </div>
+            <div class="card-body">
+                <div class="row">
+                    <div class="col-md-3 mb-3">
+                        <a href="{% url 'participant_create' %}" class="btn btn-outline-primary d-block">
+                            <i class="fas fa-user-plus me-2"></i> Ajouter un participant
+                        </a>
+                    </div>
+                    <div class="col-md-3 mb-3">
+                        <a href="{% url 'activite_create' %}" class="btn btn-outline-success d-block">
+                            <i class="fas fa-calendar-plus me-2"></i> Créer une activité
+                        </a>
+                    </div>
+                    <div class="col-md-3 mb-3">
+                        <a href="{% url 'inscription_create' %}" class="btn btn-outline-info d-block">
+                            <i class="fas fa-clipboard-check me-2"></i> Inscrire à une activité
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
